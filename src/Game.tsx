@@ -4,6 +4,9 @@ import dictionary from "./dictionary.json";
 import { Clue, clue, describeClue, violation } from "./clue";
 import { Keyboard } from "./Keyboard";
 import targetList from "./targets.json";
+
+import Cookies from 'universal-cookie';
+
 import {
   describeSeed,
   dictionarySet,
@@ -33,6 +36,8 @@ interface GameProps {
 const targets = targetList.slice(0, targetList.indexOf("murky") + 1); // Words no rarer than this one
 const minLength = 4;
 const maxLength = 11;
+
+const cookies = new Cookies();
 
 function randomTarget(wordLength: number): string {
   const eligible = targets.filter((word) => word.length === wordLength);
@@ -188,6 +193,7 @@ function Game(props: GameProps) {
           return;
         }
       }
+
       setGuesses((guesses) => guesses.concat([currentGuess]));
       setCurrentGuess((guess) => "");
 
@@ -196,16 +202,27 @@ function Game(props: GameProps) {
           challenge ? "play a random game" : "play again"
         })`;
 
+      let gameState = "."; // Used for cookie storage
       if (currentGuess === target) {
         setHint(gameOver("won"));
         setGameState(GameState.Won);
+        gameState = "W";
       } else if (guesses.length + 1 === props.maxGuesses) {
         setHint(gameOver("lost"));
         setGameState(GameState.Lost);
+        gameState = "L";
       } else {
         setHint("");
         speak(describeClue(clue(currentGuess, target)));
       }
+
+      //Save guess in cookie
+      let currentCookie = cookies.get('guesses');
+      currentCookie = currentCookie ? currentCookie : [];
+      let cookieAppend = [Date.now(), currentGuess, target, guesses.length, gameState].join(" ");
+      currentCookie.push(cookieAppend);
+      cookies.set('guesses', JSON.stringify(currentCookie), {secure: true, sameSite: 'none'});
+
     }
   };
 
