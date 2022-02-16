@@ -5,8 +5,6 @@ import { Clue, clue, describeClue, violation } from "./clue";
 import { Keyboard } from "./Keyboard";
 import targetList from "./targets.json";
 
-import Cookies from 'universal-cookie';
-
 import {
   describeSeed,
   dictionarySet,
@@ -37,8 +35,6 @@ const targets = targetList.slice(0, targetList.indexOf("murky") + 1); // Words n
 const minLength = 4;
 const maxLength = 11;
 
-const cookies = new Cookies();
-
 function randomTarget(wordLength: number): string {
   const eligible = targets.filter((word) => word.length === wordLength);
   let candidate: string;
@@ -56,6 +52,12 @@ function getChallengeUrl(target: string): string {
     encode(target)
   );
 }
+
+    // Make sure local storage always has a value
+    if(!window.localStorage.getItem('guesses')) {
+      window.localStorage.setItem('guesses',""); 
+    }
+
 
 let initChallenge = "";
 let challengeError = false;
@@ -202,27 +204,27 @@ function Game(props: GameProps) {
           challenge ? "play a random game" : "play again"
         })`;
 
-      let gameState = "."; // Used for cookie storage
+      //let gameState = "."; // Used for cookie storage
       if (currentGuess === target) {
         setHint(gameOver("won"));
         setGameState(GameState.Won);
-        gameState = "W";
+        //gameState = "W";
       } else if (guesses.length + 1 === props.maxGuesses) {
         setHint(gameOver("lost"));
         setGameState(GameState.Lost);
-        gameState = "L";
+        //gameState = "L";
       } else {
         setHint("");
         speak(describeClue(clue(currentGuess, target)));
       }
 
-      //Save guess in cookie
-      let currentCookie = cookies.get('guesses');
-      currentCookie = currentCookie ? currentCookie : [];
-      let cookieAppend = [Date.now(), currentGuess, target, guesses.length, gameState].join(" ");
-      currentCookie.push(cookieAppend);
-      console.log(currentCookie);
-      cookies.set('guesses', JSON.stringify(currentCookie), {secure: true, sameSite: 'none'});
+
+      // Save guess in local storage
+      let currLocalStorage = window.localStorage.getItem('guesses');
+      currLocalStorage = currLocalStorage ? currLocalStorage : "";
+      let localStorageAppend = [Date.now(), currentGuess, target, guesses.length].join(" ");
+      currLocalStorage += (","+localStorageAppend);
+      window.localStorage.setItem('guesses', currLocalStorage);
 
     }
   };

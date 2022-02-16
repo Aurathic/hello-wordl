@@ -4,10 +4,6 @@ import Game from "./Game";
 import { useEffect, useState } from "react";
 import { About } from "./About";
 
-import Cookies from 'universal-cookie';
-
-const cookies = new Cookies();
-
 function useSetting<T>(
   key: string,
   initial: T
@@ -179,8 +175,8 @@ function App() {
             <label htmlFor="enter-left-setting">"Enter" on left side</label>
           </div>
           <label htmlFor="guess-log" >Guess Log: </label>
-          <input id="guess-log" style={{ marginLeft: 20 }} type="text" value={cookies.get('guesses')} readOnly/>
-          <button style={{ marginLeft: 20 }} onClick={() => cookies.remove('guesses')}>Erase Guess Log</button>
+          <input id="guess-log" style={{ marginLeft: 20 }} type="text" value={window.localStorage.getItem('guesses')!.toString()} readOnly/>
+          <button style={{ marginLeft: 20 }} onClick={() => window.localStorage.setItem('guesses',"")}>Erase Guess Log</button>
         </div>
       )}
       <Game
