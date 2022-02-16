@@ -1,3 +1,12 @@
+## Forker's Note
+The main thing added was a client-side log for every guess and the time at which the guess was made. You can save the log by selecting going to Settings and copying the text in the box. 
+
+TODO:
+- Display most recent word (to help with Legacy)
+- Add option to export guess log as text file
+
+---
+
 # hello wordl
 
 It's [Wordle](https://www.powerlanguage.co.uk/wordle/) but you can play forever!
