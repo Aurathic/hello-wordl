@@ -53,11 +53,10 @@ function getChallengeUrl(target: string): string {
   );
 }
 
-    // Make sure local storage always has a value
-    if(!window.localStorage.getItem('guesses')) {
-      window.localStorage.setItem('guesses',""); 
-    }
-
+// Make sure local storage always has a value
+if(!window.localStorage.getItem('guesses')) {
+  window.localStorage.setItem('guesses',""); 
+}
 
 let initChallenge = "";
 let challengeError = false;
@@ -209,15 +208,16 @@ function Game(props: GameProps) {
         setHint(gameOver("won"));
         setGameState(GameState.Won);
         //gameState = "W";
+        window.localStorage.setItem('lastWord', target);
       } else if (guesses.length + 1 === props.maxGuesses) {
         setHint(gameOver("lost"));
         setGameState(GameState.Lost);
         //gameState = "L";
+        window.localStorage.setItem('lastWord', target);
       } else {
         setHint("");
         speak(describeClue(clue(currentGuess, target)));
       }
-
 
       // Save guess in local storage
       let currLocalStorage = window.localStorage.getItem('guesses');
@@ -278,6 +278,9 @@ function Game(props: GameProps) {
 
   return (
     <div className="Game" style={{ display: props.hidden ? "none" : "block" }}>
+      <div>
+        <label htmlFor="lastWord">Previous Word: {window.localStorage.getItem('lastWord')?.toUpperCase()}</label>
+      </div>
       <div className="Game-options">
         <label htmlFor="wordLength">Letters:</label>
         <input
@@ -310,7 +313,9 @@ function Game(props: GameProps) {
               `The answer was ${target.toUpperCase()}. (Enter to play again)`
             );
             setGameState(GameState.Lost);
+            
             (document.activeElement as HTMLElement)?.blur();
+            window.localStorage.setItem('lastWord', target);
           }}
         >
           Give up
