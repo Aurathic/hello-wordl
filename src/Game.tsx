@@ -221,7 +221,7 @@ function Game(props: GameProps) {
       currentCookie = currentCookie ? currentCookie : [];
       let cookieAppend = [Date.now(), currentGuess, target, guesses.length, gameState].join(" ");
       currentCookie.push(cookieAppend);
-      //console.log(currentCookie);
+      console.log(currentCookie);
       cookies.set('guesses', JSON.stringify(currentCookie), {secure: true, sameSite: 'none'});
 
     }
