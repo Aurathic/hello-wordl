@@ -2,8 +2,9 @@
 The main thing added was a client-side log for every guess and the time at which the guess was made. You can save the log by selecting going to Settings and copying the text in the box. 
 
 TODO:
-- Display most recent word (to help with Legacy)
 - Add option to export guess log as text file
+- Add a note saying if the local storage is too full, just in case
+- Maybe add on-site statistics (using D3.js?)
 
 ---
 
