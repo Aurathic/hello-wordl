@@ -35,6 +35,7 @@ const targets = targetList.slice(0, targetList.indexOf("murky") + 1); // Words n
 const minLength = 4;
 const maxLength = 11;
 
+
 function randomTarget(wordLength: number): string {
   const eligible = targets.filter((word) => word.length === wordLength);
   let candidate: string;
